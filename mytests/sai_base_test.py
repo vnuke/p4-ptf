@@ -82,7 +82,16 @@ class AGFBaseTest(BaseTest):
 
         self.context = 1
 
+        self.dataplane = ptf.dataplane_instance
+        self.dataplane.flush()
+        if config["log_dir"] != None:
+            filename = os.path.join(config["log_dir"], str(self)) + ".pcap"
+            self.dataplane.start_pcap(filename)
+
     def tearDown(self):
+        if config["log_dir"] != None:
+            self.dataplane.stop_pcap()
+        testutils.reset_filters()
         BaseTest.tearDown(self)
         self.transport.close()
 
