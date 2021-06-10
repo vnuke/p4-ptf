@@ -37,7 +37,7 @@ class SAIThriftTest(BaseTest):
             print(k, ":\t\t\t", v)
 
         # Set up thrift client and contact server
-        self.transport = TSocket.TSocket('localhost', 9092)
+        self.transport = TSocket.TSocket('localhost', 9090)
         self.transport = TTransport.TBufferedTransport(self.transport)
         self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
 
@@ -73,7 +73,7 @@ class SAIThriftDataplaneTest(SAIThriftTest):
 class AGFBaseTest(BaseTest):
     def setUp(self):
         BaseTest.setUp(self)
-        self.transport = TSocket.TSocket('localhost', 9092)
+        self.transport = TSocket.TSocket('localhost', 9090)
         self.transport = TTransport.TBufferedTransport(self.transport)
         self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
 
