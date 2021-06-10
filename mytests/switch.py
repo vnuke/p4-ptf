@@ -42,6 +42,7 @@ class SimpleForward(sai_base_test.AGFBaseTest):
         mac2 = '00:22:22:22:22:22'
         mac_action = 1
 
+        self.addIPv4Route()
 
 
         pkt = simple_tcp_packet(eth_dst='00:11:11:11:11:11',
