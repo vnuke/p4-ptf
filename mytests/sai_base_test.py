@@ -9,19 +9,22 @@ import ptf
 from ptf.base_tests import BaseTest
 from ptf import config
 import ptf.testutils as testutils
+import ptf.thriftutils as thriftutils
 
+import os
 ################################################################
 #
 # Thrift interface base tests
 #
 ################################################################
 
-import switch_sai_thrift
-import switch_sai_thrift.switch_sai_rpc as switch_sai_rpc
+import bm_runtime
+from bm_runtime.standard.Standard import Client
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
+from thrift.Thrift import TException, TApplicationException
 
 class SAIThriftTest(BaseTest):
 
@@ -29,22 +32,22 @@ class SAIThriftTest(BaseTest):
         BaseTest.setUp(self)
 
         test_params = testutils.test_params_get()
-        print
-        print "You specified the following test-params when invoking ptf:"
+        print("You specified the following test-params when invoking ptf:")
         for k, v in test_params.items():
-            print k, ":\t\t\t", v
+            print(k, ":\t\t\t", v)
 
         # Set up thrift client and contact server
         self.transport = TSocket.TSocket('localhost', 9092)
         self.transport = TTransport.TBufferedTransport(self.transport)
         self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
 
-        self.client = switch_sai_rpc.Client(self.protocol)
+        self.client = Client(self.protocol)
         self.transport.open()
 
     def tearDown(self):
         BaseTest.tearDown(self)
         self.transport.close()
+
 
 class SAIThriftDataplaneTest(SAIThriftTest):
 
@@ -65,3 +68,29 @@ class SAIThriftDataplaneTest(SAIThriftTest):
             self.dataplane.stop_pcap()
         testutils.reset_filters()
         SAIThriftTest.tearDown(self)
+
+
+class AGFBaseTest(BaseTest):
+    def setUp(self):
+        BaseTest.setUp(self)
+        self.transport = TSocket.TSocket('localhost', 9092)
+        self.transport = TTransport.TBufferedTransport(self.transport)
+        self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+
+        self.client = Client(self.protocol)
+        self.transport.open()
+
+        self.context = 1
+
+    def tearDown(self):
+        BaseTest.tearDown(self)
+        self.transport.close()
+
+    def addIPv4Route(self, ip, mac, port):
+        try:
+            self.client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", ip, "MyIngress.ipv4_forward", [mac, port])
+        except TApplicationException as err:
+            print(err)
+        except TException as err:
+            print("{0}", err.message)
+
