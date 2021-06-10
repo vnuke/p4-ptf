@@ -82,11 +82,16 @@ class AGFBaseTest(BaseTest):
 
         self.context = 1
 
+        self.ip_rule = "10.0.1.1"
+        self.mac_rule = "08:00:00:00:01:11"
+        self.port_rule = "1"
+
         self.dataplane = ptf.dataplane_instance
         self.dataplane.flush()
         if config["log_dir"] != None:
             filename = os.path.join(config["log_dir"], str(self)) + ".pcap"
             self.dataplane.start_pcap(filename)
+	
 
     def tearDown(self):
         if config["log_dir"] != None:
@@ -95,11 +100,15 @@ class AGFBaseTest(BaseTest):
         BaseTest.tearDown(self)
         self.transport.close()
 
-    def addIPv4Route(self, ip, mac, port):
+    def addIPv4Route(self):
         try:
-            self.client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", ip, "MyIngress.ipv4_forward", [mac, port])
+            self.client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", self.ip_rule, "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule])
         except TApplicationException as err:
             print(err)
         except TException as err:
             print("{0}", err.message)
 
+    def setIPv4Rules(self, ip, mac, port):
+        self.ip_rule = ip
+        self.mac_rule = mac
+        self.port_rule = port
