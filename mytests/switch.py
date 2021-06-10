@@ -36,8 +36,8 @@ class SimpleForward(sai_base_test.AGFBaseTest):
         print()
         print("Sending packet ")
         vlan_id = 10
-        port1 = port_list[1]
-        port2 = port_list[2]
+        port1 = 0
+        port2 = 1
         mac1 = '00:11:11:11:11:11'
         mac2 = '00:22:22:22:22:22'
         mac_action = 1
@@ -54,13 +54,9 @@ class SimpleForward(sai_base_test.AGFBaseTest):
             # in tuple: 0 is device number, 2 is port number
             # this tuple uniquely identifies a port
             send_packet(self, (0, 2), pkt)
-            verify_packets(self, pkt, device_number=0, ports=[1])
+            verify_packets(self, pkt, device_number=0, ports=1)
             # or simply
             # send_packet(self, 2, pkt)
             # verify_packets(self, pkt, ports=[1])
         finally:
-            sai_thrift_delete_fdb(self.client, vlan_id, mac1, port1)
-            sai_thrift_delete_fdb(self.client, vlan_id, mac2, port2)
-
-            self.client.sai_thrift_remove_ports_from_vlan(vlan_id, [vlan_port1, vlan_port2])
-            self.client.sai_thrift_delete_vlan(vlan_id)
+            print("sending was a success, please check table of switch to verify tables")
