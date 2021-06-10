@@ -54,7 +54,7 @@ class SimpleForward(sai_base_test.AGFBaseTest):
             # in tuple: 0 is device number, 2 is port number
             # this tuple uniquely identifies a port
             send_packet(self, (0, 2), pkt)
-            verify_packets(self, pkt, device_number=0, ports=1)
+            verify_packets(self, pkt, device_number=0, ports=[1])
             # or simply
             # send_packet(self, 2, pkt)
             # verify_packets(self, pkt, ports=[1])
