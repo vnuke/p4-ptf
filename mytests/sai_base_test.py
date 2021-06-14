@@ -33,10 +33,11 @@ class AGFBaseTest(BaseTest):
         self.clients = bmpy_utils.thrift_connect_standard('localhost', 9090)
 
         self.context = 1
-
-        self.ip_rule = "10.0.1.1"
+        ip="10.0.1.1"
+        self.ip_rule = [int(b)for b in ip.split('.')]
         self.mac_rule = "08:00:00:00:01:11"
         self.port_rule = "1"
+        self.prefix_len_rule = 24
 
         self.dataplane = ptf.dataplane_instance
         self.dataplane.flush()
@@ -55,10 +56,12 @@ class AGFBaseTest(BaseTest):
     def addIPv4Route(self):
         try:
             print(self.clients.bm_mgmt_get_info())
-            mtEntry = BmMatchParamLPM(key=self.ip_rule, prefix_length=24)
-            params = BmMatchParam(type=BmMatchParamType.LPM, lpm=mtEntry)
 
-            self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [params],
+            lpm_param = BmMatchParamLPM(type=thriftutils.bytes_to_string(self.ip_rule),
+                                        prefix_length=self.prefix_len_rule)
+            param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
+
+            self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", param,
                                         "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
 
         except TApplicationException as err:
