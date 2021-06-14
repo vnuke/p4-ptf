@@ -57,7 +57,7 @@ class AGFBaseTest(BaseTest):
         try:
             print(self.clients.bm_mgmt_get_info())
 
-            lpm_param = BmMatchParamLPM(type=thriftutils.bytes_to_string(self.ip_rule),
+            lpm_param = BmMatchParamLPM(key=thriftutils.bytes_to_string(self.ip_rule),
                                         prefix_length=self.prefix_len_rule)
             param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
 
