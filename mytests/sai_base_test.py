@@ -54,7 +54,7 @@ class AGFBaseTest(BaseTest):
 
     def addIPv4Route(self):
         try:
-            print(self.clients)
+            print(self.clients.bm_mgmt_get_info())
             mtEntry = BmMatchParamLPM(key=self.ip_rule, prefix_length=24)
             params = BmMatchParam(type=BmMatchParamType.LPM, lpm=mtEntry)
 
