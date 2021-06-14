@@ -103,8 +103,11 @@ class AGFBaseTest(BaseTest):
 
     def addIPv4Route(self):
         try:
+            print(self.client.bm_mgmt_get_info())
             mtEntry = BmMatchParamLPM(key=self.ip_rule, prefix_length=24)
-            self.client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [mtEntry],
+            params = BmMatchParam(type=BmMatchParamType.LPM, lpm=mtEntry)
+
+            self.client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [params],
                                         "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
 
         except TApplicationException as err:
