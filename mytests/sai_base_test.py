@@ -30,7 +30,7 @@ from thrift.Thrift import TException, TApplicationException
 class AGFBaseTest(BaseTest):
     def setUp(self):
         BaseTest.setUp(self)
-        bmpy_utils.thrift_connect_standard('localhost', 9090)
+        self.clients = bmpy_utils.thrift_connect_standard('localhost', 9090)
 
         self.context = 1
 
@@ -54,7 +54,7 @@ class AGFBaseTest(BaseTest):
 
     def addIPv4Route(self):
         try:
-            print(self.client.bm_mgmt_get_info())
+            print(self.clients)
             mtEntry = BmMatchParamLPM(key=self.ip_rule, prefix_length=24)
             params = BmMatchParam(type=BmMatchParamType.LPM, lpm=mtEntry)
 
