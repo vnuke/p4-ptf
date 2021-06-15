@@ -74,9 +74,9 @@ class AGFBaseTest(BaseTest):
                                         prefix_length=self.prefix_len_rule)
             param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
 
-            self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
+            res = self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
-
+            print(res)
 
         except TApplicationException as err:
             print(err)
