@@ -44,6 +44,7 @@ class SimpleForward(sai_base_test.AGFBaseTest):
 
         self.addIPv4Route()
 
+        print(self.clients.bm_mt_get_num_entries(0, "MyIngress.ipv4_lpm"))
 
         pkt = simple_tcp_packet(eth_dst='00:11:11:11:11:11',
                                 eth_src='00:22:22:22:22:22',
