@@ -34,7 +34,7 @@ except:
 import bmpy_utils as utils
 
 from thrift.Thrift import TException, TApplicationException
-from runtime_CLI import int_to_bytes
+from runtime_CLI import int_to_bytes, bytes_to_string
 
 
 class AGFBaseTest(BaseTest):
@@ -46,8 +46,9 @@ class AGFBaseTest(BaseTest):
         ip = "10.0.1.1"
         self.ip_rule = [int(b) for b in ip.split('.')]
         mac = "08:00:00:00:01:11"
-        self.mac_rule = [int(b, 16) for b in mac.split(':')]
-        self.port_rule = int_to_bytes("1", (9 + 7) // 8)  # 9 is the bitwidth of the port argument
+        self.mac_rule = bytes_to_string([int(b, 16) for b in mac.split(':')])
+        port_bytes = int_to_bytes(1, (9 + 7) // 8)  # 9 is the bitwidth of the port argument
+        self.port_rule = bytes_to_string(port_bytes)
         # see line 558 of https://github.com/p4lang/behavioral-model/blob/main/tools/runtime_CLI.py
         self.prefix_len_rule = 24
 
