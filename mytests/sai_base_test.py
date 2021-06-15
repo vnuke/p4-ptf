@@ -44,7 +44,7 @@ class AGFBaseTest(BaseTest):
 
         self.context = 1
         ip = "10.0.1.1"
-        self.ip_rule = bytes_to_string([int(b) for b in ip.split('.')])
+        self.ip_rule = [int(b) for b in ip.split('.')]
         mac = "08:00:00:00:01:11"
         self.mac_rule = bytes_to_string([int(b, 16) for b in mac.split(':')])
         port_bytes = int_to_bytes(1, (9 + 7) // 8)  # 9 is the bitwidth of the port argument
@@ -82,7 +82,7 @@ class AGFBaseTest(BaseTest):
             print(res)
 
         except TApplicationException as err:
-            print("haz "+ err)
+            print("haz "+ err.message)
         except TException as err:
             print("haz {0}", err.message)
 
