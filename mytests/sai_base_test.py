@@ -40,7 +40,7 @@ from runtime_CLI import int_to_bytes, bytes_to_string
 class AGFBaseTest(BaseTest):
     def setUp(self):
         BaseTest.setUp(self)
-        self.clients = utils.thrift_connect_standard('localhost', 9090)
+        self.standard_client = utils.thrift_connect_standard('localhost', 9090)
 
         self.context = 1
         ip = "10.0.1.1"
@@ -69,21 +69,21 @@ class AGFBaseTest(BaseTest):
 
     def addIPv4Route(self):
         try:
-            print(self.clients.bm_mgmt_get_info())
+            print(self.standard_client.bm_mgmt_get_info())
 
             lpm_param = BmMatchParamLPM(key=thriftutils.bytes_to_string(self.ip_rule),
                                         prefix_length=self.prefix_len_rule)
             param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
 
             print([self.mac_rule, self.port_rule])
-            res = self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
+            res = self.standard_client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
             print(res)
 
         except TApplicationException as err:
-            print(err)
+            print("haz "+ err)
         except TException as err:
-            print("{0}", err.message)
+            print("haz {0}", err.message)
 
     def setIPv4Rules(self, ip, mac, port):
         self.ip_rule = ip
