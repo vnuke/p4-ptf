@@ -19,39 +19,51 @@ import os
 ################################################################
 
 import bm_runtime
-from bm_runtime.standard.Standard import Client
+from bm_runtime.standard import Standard
 from bm_runtime.standard.ttypes import *
 
-import bmpy_utils
+try:
+    from bm_runtime.simple_pre import SimplePre
+except:
+    pass
+try:
+    from bm_runtime.simple_pre_lag import SimplePreLAG
+except:
+    pass
+
+import bmpy_utils as utils
 
 from thrift.Thrift import TException, TApplicationException
+from runtime_CLI import int_to_bytes
 
 
 class AGFBaseTest(BaseTest):
     def setUp(self):
         BaseTest.setUp(self)
-        self.clients = bmpy_utils.thrift_connect_standard('localhost', 9090)
+        self.clients = utils.thrift_connect_standard('localhost', 9090)
 
         self.context = 1
-        ip="10.0.1.1"
-        self.ip_rule = [int(b)for b in ip.split('.')]
-        self.mac_rule = "08:00:00:00:01:11"
-        self.port_rule = "1"
+        ip = "10.0.1.1"
+        self.ip_rule = [int(b) for b in ip.split('.')]
+        mac = "08:00:00:00:01:11"
+        self.mac_rule = [int(b, 16) for b in mac.split(':')]
+        self.port_rule = int_to_bytes("1", (9 + 7) // 8)  # 9 is the bitwidth of the port argument
+        # see line 558 of https://github.com/p4lang/behavioral-model/blob/main/tools/runtime_CLI.py
         self.prefix_len_rule = 24
 
         self.dataplane = ptf.dataplane_instance
         self.dataplane.flush()
-        if config["log_dir"] != None:
+        if config["log_dir"].isNone:
             filename = os.path.join(config["log_dir"], str(self)) + ".pcap"
             self.dataplane.start_pcap(filename)
-	
 
     def tearDown(self):
-        if config["log_dir"] != None:
+        if config["log_dir"].isNone:
             self.dataplane.stop_pcap()
         testutils.reset_filters()
         BaseTest.tearDown(self)
-        #self.transport.close()
+
+        # self.transport.close()
 
     def addIPv4Route(self):
         try:
@@ -62,7 +74,7 @@ class AGFBaseTest(BaseTest):
             param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
 
             self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
-                                        "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
+                                         "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
 
         except TApplicationException as err:
             print(err)
