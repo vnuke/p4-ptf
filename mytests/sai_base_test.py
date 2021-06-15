@@ -49,6 +49,7 @@ class AGFBaseTest(BaseTest):
         self.mac_rule = bytes_to_string([int(b, 16) for b in mac.split(':')])
         port_bytes = int_to_bytes(1, (9 + 7) // 8)  # 9 is the bitwidth of the port argument
         self.port_rule = bytes_to_string(port_bytes)
+
         # see line 558 of https://github.com/p4lang/behavioral-model/blob/main/tools/runtime_CLI.py
         self.prefix_len_rule = 24
 
@@ -74,6 +75,7 @@ class AGFBaseTest(BaseTest):
                                         prefix_length=self.prefix_len_rule)
             param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
 
+            print([self.mac_rule, self.port_rule])
             res = self.clients.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule], None)
             print(res)
