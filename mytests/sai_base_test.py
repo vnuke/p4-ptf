@@ -60,7 +60,7 @@ class AGFBaseTest(BaseTest):
             self.dataplane.start_pcap(filename)
 
     def tearDown(self):
-        self.standard_client.bm_mt_delete_entry(0, "MyIngress.ipv4_lpm", self.entry_handle)
+        self.standard_client.bm_mt_delete_entry(0, "MyIngress.ipv4_lpm", self.entry_handle.entry_handle)
         if config["log_dir"] is not None:
             self.dataplane.stop_pcap()
         testutils.reset_filters()
@@ -77,7 +77,7 @@ class AGFBaseTest(BaseTest):
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule],
                                                        BmAddEntryOptions(priority=0))
             self.entry_handle = self.standard_client.bm_mt_get_entry_from_key(0, "MyIngress.ipv4_lpm", [param], None)
-            print(self.entry_handle)
+            print(self.entry_handle.entry_handle)
             print(res)
 
 
