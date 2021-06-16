@@ -60,6 +60,7 @@ class AGFBaseTest(BaseTest):
             self.dataplane.start_pcap(filename)
 
     def tearDown(self):
+        self.standard_client.bm_mt_delete_entry(0, "MyIngress.ipv4_lpm", self.entry_handle)
         if config["log_dir"] is not None:
             self.dataplane.stop_pcap()
         testutils.reset_filters()
