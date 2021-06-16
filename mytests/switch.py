@@ -27,7 +27,7 @@ from ptf.testutils import *
 from bm_runtime.standard.ttypes import  *
 
 from ptf.mask import Mask
-
+from scapy.layers.inet import IP, Ether, TCP
 
 
 @group("group_1")
@@ -59,11 +59,16 @@ class SimpleForward(sai_base_test.AGFBaseTest):
                                    ip_ihl=5,
                                    pktlen=86,
                                     with_tcp_chksum=True)
+        mask = Mask(pkt_rcv, ignore_extra_bytes=True)
+        mask.set_do_not_care_scapy(IP, "chksum")
+        mask.set_do_not_care_scapy(TCP, "dataofs")
+        mask.set_do_not_care_scapy(TCP, "chksum")
+
         try:
             # in tuple: 0 is device number, 2 is port number
             # this tuple uniquely identifies a port
             send_packet(self, (0, 2), pkt)
-            verify_packets(self, pkt_rcv, device_number=0, ports=[1])
+            verify_packets(self, mask, device_number=0, ports=[1])
             # or simply
             # send_packet(self, 2, pkt)
             # verify_packets(self, pkt, ports=[1])
