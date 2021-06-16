@@ -62,6 +62,7 @@ class SimpleForward(sai_base_test.AGFBaseTest):
         mask.set_do_not_care_scapy(IP, "chksum")
         mask.set_do_not_care_scapy(TCP, "dataofs")
         mask.set_do_not_care_scapy(TCP, "chksum")
+        mask.set_do_not_care_scapy(IP, "len")
         pkt_rcv.show2()
         try:
             # in tuple: 0 is device number, 2 is port number
