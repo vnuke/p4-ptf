@@ -55,7 +55,10 @@ class SimpleForward(sai_base_test.AGFBaseTest):
                                    eth_src='00:11:11:11:11:11',
                                    ip_dst='10.0.1.1',
                                    ip_id=101,
-                                   ip_ttl=64)
+                                   ip_ttl=63,
+                                   ip_ihl=5,
+                                   pktlen=86,
+                                    with_tcp_chksum=True)
         try:
             # in tuple: 0 is device number, 2 is port number
             # this tuple uniquely identifies a port
