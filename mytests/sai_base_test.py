@@ -77,6 +77,7 @@ class AGFBaseTest(BaseTest):
                                                        BmAddEntryOptions(priority=0))
             self.entry_handle = self.standard_client.bm_mt_get_entry_from_key(0, "MyIngress.ipv4_lpm", [param])
             print(self.entry_handle)
+            print(res)
 
 
         except TApplicationException as err:
