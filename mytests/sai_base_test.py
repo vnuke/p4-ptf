@@ -75,8 +75,8 @@ class AGFBaseTest(BaseTest):
             res = self.standard_client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule],
                                                        BmAddEntryOptions(priority=0))
-            print(res)
-            self.entry_handle = res
+            self.entry_handle = self.standard_client.bm_mt_get_entry_from_key(0, "MyIngress.ipv4_lpm", [param])
+            print(self.entry_handle)
 
 
         except TApplicationException as err:
