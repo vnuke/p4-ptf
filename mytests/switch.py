@@ -51,12 +51,16 @@ class SimpleForward(sai_base_test.AGFBaseTest):
                                 ip_dst='10.0.1.1',
                                 ip_id=101,
                                 ip_ttl=64)
-
+        pkt_rcv = simple_tcp_packet(eth_dst='08:00:00:00:01:11',
+                                   eth_src='00:11:11:11:11:11',
+                                   ip_dst='10.0.1.1',
+                                   ip_id=101,
+                                   ip_ttl=64)
         try:
             # in tuple: 0 is device number, 2 is port number
             # this tuple uniquely identifies a port
             send_packet(self, (0, 2), pkt)
-            verify_packets(self, pkt, device_number=0, ports=[1])
+            verify_packets(self, pkt_rcv, device_number=0, ports=[1])
             # or simply
             # send_packet(self, 2, pkt)
             # verify_packets(self, pkt, ports=[1])

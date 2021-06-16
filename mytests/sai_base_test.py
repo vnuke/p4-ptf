@@ -42,7 +42,7 @@ class AGFBaseTest(BaseTest):
         BaseTest.setUp(self)
         self.standard_client = utils.thrift_connect_standard('localhost', 9090)
 
-        self.context = 1
+        self.context = 0
         ip = "10.0.1.1"
         self.ip_rule = [int(b) for b in ip.split('.')]
         mac = "08:00:00:00:01:11"
@@ -74,7 +74,7 @@ class AGFBaseTest(BaseTest):
             lpm_param = BmMatchParamLPM(key=bytes_to_string(self.ip_rule),
                                         prefix_length=self.prefix_len_rule)
             param = BmMatchParam(type=BmMatchParamType.LPM, lpm=lpm_param)
-
+            print(param.to_str())
             print([self.mac_rule, self.port_rule])
             res = self.standard_client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule],
