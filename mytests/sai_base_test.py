@@ -76,7 +76,7 @@ class AGFBaseTest(BaseTest):
             res = self.standard_client.bm_mt_add_entry(self.context, "MyIngress.ipv4_lpm", [param],
                                          "MyIngress.ipv4_forward", [self.mac_rule, self.port_rule],
                                                        BmAddEntryOptions(priority=0))
-            self.entry_handle = self.standard_client.bm_mt_get_entry_from_key(0, "MyIngress.ipv4_lpm", [param])
+            self.entry_handle = self.standard_client.bm_mt_get_entry_from_key(0, "MyIngress.ipv4_lpm", [param], None)
             print(self.entry_handle)
             print(res)
 
